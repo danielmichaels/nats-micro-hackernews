@@ -1,0 +1,51 @@
+version: '3'
+
+dotenv:
+  - .env
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+    silent: true
+
+  dev:
+    cmds:
+      - air
+
+  fetch:
+    desc: Fetch top 100 tops and store in KV
+    cmds:
+      - nats req hn.fetch.ids "" {{.CLI_ARGS}}
+
+  fetch:list:
+    desc: List all stored IDs
+    cmds:
+      - nats req hn.fetch.list ""
+
+  process:pub:*:
+    desc: Process a single ID and print the posts info
+    vars:
+      ARG_1: "{{index .MATCH 0}}"
+    cmds:
+      - nats pub hn.process.id {{.ARG_1}}
+
+  process:reply:*:
+    desc: Process a single ID and print the posts info
+    vars:
+      ARG_1: "{{index .MATCH 0}}"
+    cmds:
+      - nats req hn.process.id.reply {{.ARG_1}} | jq .
+
+  sort:
+    desc: Run sort over KV and save to Object Store
+    cmds:
+      - nats req hn.sort.ids ""
+
+  top:*:
+    desc: Return the top ranked entries. Pass an int to retrieve the top entries upto that amount
+    vars:
+      ARG_1: "{{index .MATCH 0}}"
+    cmds:
+      - nats req hn.sort.top {{.ARG_1}} | jq .
+
