@@ -35,7 +35,7 @@ tasks:
     vars:
       ARG_1: "{{index .MATCH 0}}"
     cmds:
-      - nats req hn.process.id.reply {{.ARG_1}} | jq .
+      - nats req hn.process.reply {{.ARG_1}} | jq .
 
   sort:
     desc: Run sort over KV and save to Object Store

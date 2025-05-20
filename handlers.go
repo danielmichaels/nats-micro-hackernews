@@ -38,7 +38,7 @@ func handleFetchIDs(kv nats.KeyValue, nc *nats.Conn) micro.HandlerFunc {
 			_ = req.Error("500", "Failed to decode IDs", nil)
 			return
 		}
-		slog.Info("Fetched %v IDs", len(ids))
+		slog.Info("Fetched IDs", "total", len(ids))
 
 		if len(ids) > 0 {
 			idBytes, _ := json.Marshal(ids)

@@ -40,9 +40,15 @@ func run() error {
 		Bucket: "hacker_news",
 		TTL:    1 * time.Hour,
 	})
+	if err != nil {
+		return err
+	}
 	obj, err := js.CreateObjectStore(&nats.ObjectStoreConfig{
 		Bucket: "hacker_news",
 	})
+	if err != nil {
+		return err
+	}
 
 	svc, err := micro.AddService(nc, micro.Config{
 		Name:        "HackerNews",
@@ -74,7 +80,7 @@ func run() error {
 	if err := process.AddEndpoint("process", processFetchedIDs(kv), micro.WithEndpointSubject("id")); err != nil {
 		return err
 	}
-	if err := process.AddEndpoint("process", processFetchedIDsReply(kv), micro.WithEndpointSubject("id.reply")); err != nil {
+	if err := process.AddEndpoint("process-reply", processFetchedIDsReply(kv), micro.WithEndpointSubject("reply")); err != nil {
 		return err
 	}
 
